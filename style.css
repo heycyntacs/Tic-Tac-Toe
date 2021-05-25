@@ -23,7 +23,7 @@ main h1 {
     grid-template-columns: repeat(3, auto);
 }
 
-.input {
+.field {
     height: 130px;
     width: 130px;
     border: 0.5px solid;
