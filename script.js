@@ -11,6 +11,7 @@ const displayController = (() => {
     const playerO = player ('O'); 
     const playerX = player ('X'); 
     const buttons = document.querySelectorAll('.field');
+    const winnerMessage = document.querySelector('.winner');
 
     let changeTurn = true;
     let gameWon = false;
@@ -25,7 +26,7 @@ const displayController = (() => {
     const markField = board => {
         for (let i = 0; i < board.length; i++) {
             buttons[i].addEventListener('click', () => {
-                if (buttons[i].textContent) return;
+                if (buttons[i].textContent || gameWon === true) return;
                 if (changeTurn === true) {
                     buttons[i].textContent = playerO.sign;
                     board[i] = playerO.sign;
@@ -44,55 +45,60 @@ const displayController = (() => {
         } 
     }
 
-        const winningConditions = [
-            [0, 1, 2],
-            [3, 4, 5],
-            [6, 7, 8],
-            [0, 3, 6],
-            [1, 4, 7],
-            [2, 5, 8],
-            [0, 4, 8],
-            [2, 4, 6]
-        ];
+    const winningConditions = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+    ];
 
-        function checkWinner (board) {
-            for (let i = 0; i <= 7; i++) {
-                const winCondition = winningConditions[i];
-                let a = board[winCondition[0]];
-                let b = board[winCondition[1]];
-                let c = board[winCondition[2]];
-                if (a === '' || b === '' || c === '') continue;
-                if (a === b && b === c) {
-                    gameWon = true;
-                    break;
-                }
-                if (round === 9 && (a !== b && b !== c)) {
-                    alert('Draw');
-                    resetBoard(board);
-                    return;
-                }
+    const checkWinner = board => {
+        for (let i = 0; i <= 7; i++) {
+            const winCondition = winningConditions[i];
+            let a = board[winCondition[0]];
+            let b = board[winCondition[1]];
+            let c = board[winCondition[2]];
+            if (a === '' || b === '' || c === '') continue;
+            if (a === b && b === c) {
+                gameWon = true;
+                break;
             }
+        }
 
-            if (gameWon) {
-                alert('Victory');
-                resetBoard(board);
+        if (gameWon) {
+            if (changeTurn === false) {
+                winnerMessage.textContent = 'Player O Wins!';
+                winnerMessage.style.paddingBottom = '50px';
                 return;
             }
+            winnerMessage.textContent = 'Player X Wins!';
+            winnerMessage.style.paddingBottom = '50px';
+            return;
         }
-
-        function resetBoard (board) {
-            for (let i = 0; i < board.length; i++) {
-                board[i] = '';
-                buttons[i].textContent = board[i];
-            }
-            gameWon = false;
-            round = 0;
+        else if (round === 9) {
+            winnerMessage.textContent = 'Draw!';
+            winnerMessage.style.paddingBottom = '50px';
+            return;
         }
+    };
 
-    return {renderBoard, markField}
+    const resetButton = document.querySelector('.reset');
+    resetButton.addEventListener('click', () => {
+        for (let i = 0; i < gameBoard.board.length; i++) {
+            gameBoard.board[i] = '';
+        }
+        renderBoard(gameBoard.board);
+        gameWon = false;
+        round = 0;
+        winnerMessage.textContent = null;
+        winnerMessage.style.paddingBottom = null;
+    });
+
+    return {markField}
 })();
 
-const gameController = (() => {
-    displayController.renderBoard(gameBoard.board);
-    displayController.markField(gameBoard.board);
-})();
+displayController.markField(gameBoard.board);

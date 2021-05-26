@@ -10,13 +10,13 @@ main {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 70vh;
 }
 
 main h1 {
     font-size: 3rem;
     padding: 50px;
 }
+
 
 .container {
     display: grid;
@@ -29,5 +29,12 @@ main h1 {
     border: 0.5px solid;
     background: none;
     font-size: 3rem;
+}
+
+.reset {
+    height: 50px;
+    width: 150px;
+    margin: 50px;
+    font-size: 1rem;
 }
 
